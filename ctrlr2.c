@@ -69,7 +69,7 @@ int cam_pid;
 int flashir, flashv;
 int firlit, fvlit;
 
-int noir_type, therm_pal;
+int ch_mapping, therm_pal;
 int shutter, camres, expmode;
 int flashy;
 int cpstage=0, cam_on, vid_on=0;
@@ -158,6 +158,14 @@ GtkWidget *slsh_flbl;
 int slsh_lsidx;
 char slsh_cimg[1024];
 char delcut[11];
+
+GtkWidget *menu;
+GtkWidget *menu_grid;
+GtkWidget *menu_btnrgi;
+GtkWidget *menu_btncir;
+GtkWidget *menu_btnmon;
+GtkWidget *menu_btnveg;
+GtkWidget *menu_btnrs;
 
 GtkWidget* reslbl;
 GtkWidget* shutlbl;
@@ -277,7 +285,8 @@ void print_list()
     }
 }
 
-
+int
+window_key_pressed(GtkWidget *widget, GdkEventKey *key, gpointer user_data);
 
 
 /******************************************************************************/
@@ -1834,13 +1843,13 @@ flash_II(void)
     sprintf(fn, 
             "/home/pi/Pictures/%s.%s.png",
             filename,
-            ntdisp[noir_type] // ? "cir" : "rgi"
+            ntdisp[ch_mapping] // ? "cir" : "rgi"
            );
     
     sprintf(fnh, 
             "/home/pi/Pictures/%s.%s.png",
             filename,
-            // (therm_pal == _THM_TIV) ? "tiv" : (ntdisph[noir_type])
+            // (therm_pal == _THM_TIV) ? "tiv" : (ntdisph[ch_mapping])
             ntdisph[therm_pal]
            );
            
@@ -1938,7 +1947,7 @@ flash_II(void)
     
     
     char* noirarg;
-    switch (noir_type)
+    switch (ch_mapping)
     {   case 0:
         noirarg = "";       // rgi
         break;
@@ -1993,7 +2002,7 @@ flash_II(void)
     system(cmdbuf);
     
     
-    // if (noir_type == 2) usleep(300000);
+    // if (ch_mapping == 2) usleep(300000);
     
 #if _SIMULSHOT
     ;
@@ -2403,7 +2412,7 @@ motion_notify_event_cb (GtkWidget      *widget,
 
 void noirbtn_update(void)
 {	/* gtk_button_set_label(noirbtn, 
-                       noir_type ? "NoIR: CIR"
+                       ch_mapping ? "NoIR: CIR"
                                  : "NoIR: RGI"
                       );
                       */
@@ -2411,7 +2420,7 @@ void noirbtn_update(void)
                       
   GtkStyleContext *context;
   context = gtk_widget_get_style_context(noirbtn);
-  switch (noir_type)
+  switch (ch_mapping)
   {   case 0:
       gtk_style_context_remove_class(context, "cir");
       gtk_style_context_remove_class(context, "veg");
@@ -2494,15 +2503,83 @@ void noirbtn_update(void)
     gtk_widget_queue_draw(preview_area);
 }
 
+static gboolean exit_menu(GtkWidget      *widget,
+                           GdkEventMotion *event,
+                           gpointer        data)
+{   
+    gtk_window_present(window);
+    gtk_window_close(menu);
+    cam_on = 1;
+    if (shutter > 999999) 
+    {
+        shutter = -1;
+    }
+    check_processes();
+}
+
+static gboolean
+btnrgi_click(GtkWidget *widget,
+                       GdkEventMotion *event,
+                       gpointer        data)
+{ 
+    ch_mapping = 0;
+    exit_menu(widget, event, data);
+    noirbtn_update();
+}
+
+static gboolean
+btncir_click(GtkWidget *widget,
+                       GdkEventMotion *event,
+                       gpointer        data)
+{ 
+    ch_mapping = 1;
+    exit_menu(widget, event, data);
+    noirbtn_update();
+}
+
+static gboolean
+btnmon_click(GtkWidget *widget,
+                       GdkEventMotion *event,
+                       gpointer        data)
+{ 
+    ch_mapping = 2;
+    exit_menu(widget, event, data);
+    noirbtn_update();
+}
+
+static gboolean
+btnveg_click(GtkWidget *widget,
+                       GdkEventMotion *event,
+                       gpointer        data)
+{ 
+    ch_mapping = 3;
+    exit_menu(widget, event, data);
+    noirbtn_update();
+}
+
+static gboolean
+btnrs_click(GtkWidget *widget,
+                       GdkEventMotion *event,
+                       gpointer        data)
+{ 
+    ch_mapping = 4;
+    exit_menu(widget, event, data);
+    noirbtn_update();
+}
+
 
 static gboolean noirbtn_click(GtkWidget      *widget,
                            GdkEventMotion *event,
                            gpointer        data)
-{ noir_type++;
-  if (noir_type > _MAX_NOIRTYPE) noir_type = 0;
+{ 
+  chmap_menu();
+  return TRUE;
   
-  if (noir_type == 5)
-  {  // Prevent xmas noir_type if month is not December.
+  ch_mapping++;
+  if (ch_mapping > _MAX_NOIRTYPE) ch_mapping = 0;
+  
+  if (ch_mapping == 5)
+  {  // Prevent xmas ch_mapping if month is not December.
     FILE* pf = popen("date +\x25m", "r");
     char buffer[1024];
     int month=0;
@@ -2515,7 +2592,7 @@ static gboolean noirbtn_click(GtkWidget      *widget,
       fclose(pf);
     }
     
-    if (month != 12) noir_type = 0;
+    if (month != 12) ch_mapping = 0;
   }
   
   noirbtn_update();
@@ -2523,6 +2600,115 @@ static gboolean noirbtn_click(GtkWidget      *widget,
   return TRUE;
 }
 
+
+void chmap_menu(GtkWidget *widget, GdkEventKey *key, int user_data)
+{
+    GtkStyleContext *context;
+    
+    printf("Turning off camera.\n");
+    cam_on = 0;
+    // slsh_lsidx = user_data;
+    raspistill_end_misery("displaying channel map menu");
+  
+    printf("Creating menu window.\n");
+    menu = gtk_application_window_new (app);
+    gtk_window_set_title (GTK_WINDOW (menu), "Menu");
+    
+    printf("Full-screening menu window.\n");
+    gtk_window_fullscreen(GTK_WINDOW(menu));
+    gtk_container_set_border_width (GTK_CONTAINER (menu), 0);
+    
+    printf("Connecting Esc keypress event.\n");
+    g_signal_connect (menu, "key-press-event",
+                    G_CALLBACK (window_key_pressed), NULL);
+
+    
+    // Big grid
+    printf("Creating menu grid.\n");
+    menu_grid = gtk_grid_new();
+    gtk_widget_set_size_request(menu_grid, SCR_RES_X, SCR_RES_Y);
+    gtk_container_add (GTK_CONTAINER (menu), menu_grid);
+    
+    int w, h;
+    printf("Getting size.\n");
+    gtk_window_get_size(menu, &w, &h);
+    
+    printf("Adding buttons.\n");
+    menu_btnrgi = gtk_button_new_with_label("RGI");
+    gtk_grid_attach(menu_grid, menu_btnrgi, 0, 0, 2, 1);
+    context = gtk_widget_get_style_context(menu_btnrgi);
+    gtk_style_context_add_class(context, "rgibig");
+    
+    printf("Adding buttons.\n");
+    menu_btncir = gtk_button_new_with_label("CIR");
+    gtk_grid_attach(menu_grid, menu_btncir, 2, 0, 2, 1);
+    context = gtk_widget_get_style_context(menu_btncir);
+    gtk_style_context_add_class(context, "cirbig");
+    
+    menu_btnmon = gtk_button_new_with_label("Mono");
+    gtk_grid_attach(menu_grid, menu_btnmon, 4, 0, 2, 1);
+    context = gtk_widget_get_style_context(menu_btnmon);
+    gtk_style_context_add_class(context, "monbig");
+    
+    menu_btnveg = gtk_button_new_with_label("Veg");
+    gtk_grid_attach(menu_grid, menu_btnveg, 0, 1, 3, 1);
+    context = gtk_widget_get_style_context(menu_btnveg);
+    gtk_style_context_add_class(context, "beebig");
+    
+    menu_btnrs = gtk_button_new_with_label("Rdsky");
+    gtk_grid_attach(menu_grid, menu_btnrs, 3, 1, 3, 1);
+    context = gtk_widget_get_style_context(menu_btnrs);
+    gtk_style_context_add_class(context, "rsbig");
+    
+    
+    gtk_widget_set_size_request(menu_btnrgi, 
+                                SCR_RES_X/3, 
+                                SCR_RES_Y/3
+                               );
+                               
+    gtk_widget_set_size_request(menu_btncir, 
+                                SCR_RES_X/3, 
+                                SCR_RES_Y/3
+                               );
+    
+    gtk_widget_set_size_request(menu_btnmon, 
+                                SCR_RES_X/3, 
+                                SCR_RES_Y/3
+                               );
+    
+    gtk_widget_set_size_request(menu_btnveg, 
+                                SCR_RES_X/2, 
+                                SCR_RES_Y/3
+                               );
+                               
+    gtk_widget_set_size_request(menu_btnrs, 
+                                SCR_RES_X/2, 
+                                SCR_RES_Y/3
+                               );
+    
+    
+    printf("Connecting button events.\n");
+    
+    g_signal_connect(menu_btnrgi, "button-press-event",
+                      G_CALLBACK (btnrgi_click), NULL);
+                      
+    g_signal_connect(menu_btncir, "button-press-event",
+                      G_CALLBACK (btncir_click), NULL);
+    
+    g_signal_connect(menu_btnveg, "button-press-event",
+                      G_CALLBACK (btnveg_click), NULL);
+    
+    g_signal_connect(menu_btnmon, "button-press-event",
+                      G_CALLBACK (btnmon_click), NULL);
+    
+    g_signal_connect(menu_btnrs, "button-press-event",
+                      G_CALLBACK (btnrs_click), NULL);
+    
+      
+    
+    printf("Showing slideshow window.\n");
+    gtk_widget_show_all(menu);
+}
 
 
 void thbtn_update(void)
@@ -3525,7 +3711,7 @@ void save_thalign(void)
 void save_settings(void)
 {	FILE* pf = fopen("/home/pi/settings", "w");
 	if (pf)
-	{	fprintf(pf, "%i\n", noir_type);
+	{	fprintf(pf, "%i\n", ch_mapping);
 		fprintf(pf, "%i\n", therm_pal);
 		fprintf(pf, "%i\n", shutter);
 		fprintf(pf, "%i\n", camres);
@@ -3551,7 +3737,7 @@ void load_settings(void)
 {	FILE* pf = fopen("/home/pi/settings", "r");
 	if (pf)
 	{	char buffer[1024];
-		fgets(buffer, 1024, pf);	noir_type = atoi(buffer);
+		fgets(buffer, 1024, pf);	ch_mapping = atoi(buffer);
 		fgets(buffer, 1024, pf);	therm_pal = atoi(buffer);
 		fgets(buffer, 1024, pf);	shutter   = atoi(buffer);
 		fgets(buffer, 1024, pf);	camres    = atoi(buffer);
@@ -3608,7 +3794,7 @@ int main (int argc, char **argv)
   cam_pid = 0;
   pwrr = 0;
   
-  noir_type = 1;        // CIR
+  ch_mapping = 1;        // CIR
   therm_pal = _THM_FIRE;        // fire
   shutter = -1;         // auto
   camres = 768;         // 1024x768px
