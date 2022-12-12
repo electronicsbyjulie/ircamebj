@@ -166,6 +166,8 @@ GtkWidget *menu_btncir;
 GtkWidget *menu_btnmon;
 GtkWidget *menu_btnveg;
 GtkWidget *menu_btnrs;
+GtkWidget *menu_btnxms;
+GtkWidget *menu_btnib;
 
 GtkWidget* reslbl;
 GtkWidget* shutlbl;
@@ -2525,6 +2527,7 @@ btnrgi_click(GtkWidget *widget,
     ch_mapping = 0;
     exit_menu(widget, event, data);
     noirbtn_update();
+    save_settings();
 }
 
 static gboolean
@@ -2535,6 +2538,7 @@ btncir_click(GtkWidget *widget,
     ch_mapping = 1;
     exit_menu(widget, event, data);
     noirbtn_update();
+    save_settings();
 }
 
 static gboolean
@@ -2545,6 +2549,7 @@ btnmon_click(GtkWidget *widget,
     ch_mapping = 2;
     exit_menu(widget, event, data);
     noirbtn_update();
+    save_settings();
 }
 
 static gboolean
@@ -2555,6 +2560,7 @@ btnveg_click(GtkWidget *widget,
     ch_mapping = 3;
     exit_menu(widget, event, data);
     noirbtn_update();
+    save_settings();
 }
 
 static gboolean
@@ -2565,6 +2571,29 @@ btnrs_click(GtkWidget *widget,
     ch_mapping = 4;
     exit_menu(widget, event, data);
     noirbtn_update();
+    save_settings();
+}
+
+static gboolean
+btnxms_click(GtkWidget *widget,
+                       GdkEventMotion *event,
+                       gpointer        data)
+{ 
+    ch_mapping = 5;
+    exit_menu(widget, event, data);
+    noirbtn_update();
+    save_settings();
+}
+
+static gboolean
+btnib_click(GtkWidget *widget,
+                       GdkEventMotion *event,
+                       gpointer        data)
+{ 
+    ch_mapping = 6;
+    exit_menu(widget, event, data);
+    noirbtn_update();
+    save_settings();
 }
 
 
@@ -2573,30 +2602,6 @@ static gboolean noirbtn_click(GtkWidget      *widget,
                            gpointer        data)
 { 
   chmap_menu();
-  return TRUE;
-  
-  ch_mapping++;
-  if (ch_mapping > _MAX_NOIRTYPE) ch_mapping = 0;
-  
-  if (ch_mapping == 5)
-  {  // Prevent xmas ch_mapping if month is not December.
-    FILE* pf = popen("date +\x25m", "r");
-    char buffer[1024];
-    int month=0;
-    if (pf)
-    { int j = 0;
-      while (fgets(buffer, 1024, pf))
-      {   if (j = atoi(buffer))               // assignment, not comparison
-            month = j;
-      }
-      fclose(pf);
-    }
-    
-    if (month != 12) ch_mapping = 0;
-  }
-  
-  noirbtn_update();
-  save_settings();
   return TRUE;
 }
 
@@ -2622,6 +2627,18 @@ void chmap_menu(GtkWidget *widget, GdkEventKey *key, int user_data)
     g_signal_connect (menu, "key-press-event",
                     G_CALLBACK (window_key_pressed), NULL);
 
+    // Get the current month for seasonal options.
+    FILE* pf = popen("date +\x25m", "r");
+    char buffer[1024];
+    int month=0;
+    if (pf)
+    { int j = 0;
+      while (fgets(buffer, 1024, pf))
+      {   if (j = atoi(buffer))               // assignment, not comparison
+            month = j;
+      }
+      fclose(pf);
+    }
     
     // Big grid
     printf("Creating menu grid.\n");
@@ -2651,7 +2668,7 @@ void chmap_menu(GtkWidget *widget, GdkEventKey *key, int user_data)
     gtk_style_context_add_class(context, "monbig");
     
     GtkWidget* menu_spacer1 = gtk_button_new_with_label("");
-    gtk_grid_attach(menu_grid, menu_spacer1, 0, 1, 1, 1);
+    gtk_grid_attach(menu_grid, menu_spacer1, 0, 1, 1, 2);
     
     menu_btnveg = gtk_button_new_with_label("Veg");
     gtk_grid_attach(menu_grid, menu_btnveg, 1, 1, 2, 1);
@@ -2664,7 +2681,20 @@ void chmap_menu(GtkWidget *widget, GdkEventKey *key, int user_data)
     gtk_style_context_add_class(context, "rsbig");
     
     GtkWidget* menu_spacer2 = gtk_button_new_with_label("");
-    gtk_grid_attach(menu_grid, menu_spacer2, 5, 1, 1, 1);
+    gtk_grid_attach(menu_grid, menu_spacer2, 5, 1, 1, 2);
+    
+    if (month == 12)
+    {
+        menu_btnxms = gtk_button_new_with_label("Xmas");
+        gtk_grid_attach(menu_grid, menu_btnxms, 1, 2, 2, 1);
+        context = gtk_widget_get_style_context(menu_btnxms);
+        gtk_style_context_add_class(context, "xmsbig");
+    
+        menu_btnib = gtk_button_new_with_label("InfrBlu");
+        gtk_grid_attach(menu_grid, menu_btnib, 3, 2, 2, 1);
+        context = gtk_widget_get_style_context(menu_btnib);
+        gtk_style_context_add_class(context, "ibbig");
+    }
     
     
     gtk_widget_set_size_request(menu_btnrgi, 
@@ -2702,6 +2732,19 @@ void chmap_menu(GtkWidget *widget, GdkEventKey *key, int user_data)
                                 SCR_RES_Y/3
                                );
     
+    if (month == 12)
+    {
+        gtk_widget_set_size_request(menu_btnxms, 
+                                    SCR_RES_X/3, 
+                                    SCR_RES_Y/3
+                                   );
+                                   
+        gtk_widget_set_size_request(menu_btnib, 
+                                    SCR_RES_X/3, 
+                                    SCR_RES_Y/3
+                                   );
+    }
+    
     
     printf("Connecting button events.\n");
     
@@ -2719,6 +2762,12 @@ void chmap_menu(GtkWidget *widget, GdkEventKey *key, int user_data)
     
     g_signal_connect(menu_btnrs, "button-press-event",
                       G_CALLBACK (btnrs_click), NULL);
+    
+    g_signal_connect(menu_btnxms, "button-press-event",
+                      G_CALLBACK (btnxms_click), NULL);
+    
+    g_signal_connect(menu_btnib, "button-press-event",
+                      G_CALLBACK (btnib_click), NULL);
     
       
     

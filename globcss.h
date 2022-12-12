@@ -235,9 +235,17 @@ char* global_css = R"GLOBCSS(
        color: #000;
     }
     
-    .rgibig *, .cirbig *, .monbig *, .vegbig *, .rsbig *
+    .rgibig *, .cirbig *, .monbig *, .vegbig *, .rsbig *, .xmsbig *, .ibbig *
     {
        background-color: transparent;
+       font-size: 53px;
+       font-weight: bold;
+       color: #fff;
+    }
+    
+    .monbig *, .vegbig *
+    {
+        color: #000;
     }
     
     .rgibig
@@ -271,6 +279,20 @@ char* global_css = R"GLOBCSS(
     .rsbig
     {
        background-image: url("/home/pi/gri.png");
+       background-size: cover;
+       background-color: transparent;
+    }
+    
+    .xmsbig
+    {
+       background-image: url("/home/pi/xmas.png");
+       background-size: cover;
+       background-color: transparent;
+    }
+    
+    .ibbig
+    {
+       background-image: url("/home/pi/bw.png");
        background-size: cover;
        background-color: transparent;
     }
