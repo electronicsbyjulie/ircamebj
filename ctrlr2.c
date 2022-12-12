@@ -2650,6 +2650,9 @@ void chmap_menu(GtkWidget *widget, GdkEventKey *key, int user_data)
     context = gtk_widget_get_style_context(menu_btnmon);
     gtk_style_context_add_class(context, "monbig");
     
+    GtkWidget* menu_spacer1 = gtk_button_new_with_label("");
+    gtk_grid_attach(menu_grid, menu_spacer1, 0, 1, 1, 1);
+    
     menu_btnveg = gtk_button_new_with_label("Veg");
     gtk_grid_attach(menu_grid, menu_btnveg, 1, 1, 2, 1);
     context = gtk_widget_get_style_context(menu_btnveg);
@@ -2659,6 +2662,9 @@ void chmap_menu(GtkWidget *widget, GdkEventKey *key, int user_data)
     gtk_grid_attach(menu_grid, menu_btnrs, 3, 1, 2, 1);
     context = gtk_widget_get_style_context(menu_btnrs);
     gtk_style_context_add_class(context, "rsbig");
+    
+    GtkWidget* menu_spacer2 = gtk_button_new_with_label("");
+    gtk_grid_attach(menu_grid, menu_spacer2, 5, 1, 1, 1);
     
     
     gtk_widget_set_size_request(menu_btnrgi, 
@@ -2683,6 +2689,16 @@ void chmap_menu(GtkWidget *widget, GdkEventKey *key, int user_data)
                                
     gtk_widget_set_size_request(menu_btnrs, 
                                 SCR_RES_X/3, 
+                                SCR_RES_Y/3
+                               );
+    
+    gtk_widget_set_size_request(menu_spacer1, 
+                                SCR_RES_X/6, 
+                                SCR_RES_Y/3
+                               );
+    
+    gtk_widget_set_size_request(menu_spacer2, 
+                                SCR_RES_X/6, 
                                 SCR_RES_Y/3
                                );
     
