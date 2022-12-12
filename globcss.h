@@ -1,238 +1,250 @@
 
-char* global_css =
-"* {     \n"
-    "       background-color: black;\n"
-    "       color: #fffec0;\n"
-    "       font-size: 32px;\n"
-    "       font-weight: 800;\n"
-    "}\n"
-    ".redbk, .redbk *\n"
-    "{\n"
-    "   background-color: #990000;\n"
-    "}\n"
-    ".pwr\n"
-    "{\n"
-    "   background-image: url(\"/home/pi/pwr.png\");\n"
-    "   background-color: transparent;\n"
-    "}\n"
-    ".pwrr\n"
-    "{\n"
-    "   background-image: url(\"/home/pi/pwrr.png\");\n"
-    "   background-color: transparent;\n"
-    "}\n"
-    ".fire\n"
-    "{\n"
-    "   background-image: -gtk-gradient(linear,\n"
-    "                                   left top,\n"
-    "                                   right top,\n"
-    "                       from (#000000),\n"
-    "                       color-stop (0.25, #0000ff),\n"
-    "                       color-stop (0.33, #990099),\n"
-    "                       color-stop (0.5, #ff0000),\n"
-    "                       color-stop (0.75, #ffff00),\n"
-    "                       to (#ffffff)\n"
-    "                                  );\n"
-    "   color: #000;\n"
-    "}\n"
+char* global_css = R"GLOBCSS(
+* {
+           background-color: black;
+           color: #fffec0;
+           font-size: 32px;
+           font-weight: 800;
+    }
+    .redbk, .redbk *
+    {
+       background-color: #990000;
+    }
+    .pwr
+    {
+       background-image: url("/home/pi/pwr.png");
+       background-color: transparent;
+    }
+    .pwrr
+    {
+       background-image: url("/home/pi/pwrr.png");
+       background-color: transparent;
+    }
+    .fire
+    {
+       background-image: -gtk-gradient(linear,
+                                       left top,
+                                       right top,
+                           from (#000000),
+                           color-stop (0.25, #0000ff),
+                           color-stop (0.33, #990099),
+                           color-stop (0.5, #ff0000),
+                           color-stop (0.75, #ffff00),
+                           to (#ffffff)
+                                      );
+       color: #000;
+    }
     
     
-    ".fever\n"
-    "{\n"
-    "   background-image: -gtk-gradient(linear,\n"
-    "                                   left top,\n"
-    "                                   right top,\n"
-    "                       from (#000000),\n"
-    "                       color-stop (0.50, #0000ff),\n"
-    "                       color-stop (0.55, #00ff00),\n"
-    "                       color-stop (0.60, #ff0000),\n"
-    "                       to (#000000)\n"
-    "                                  );\n"
-    "   color: #fff;\n"
-    "}\n"
+    .fever
+    {
+       background-image: -gtk-gradient(linear,
+                                       left top,
+                                       right top,
+                           from (#000000),
+                           color-stop (0.50, #0000ff),
+                           color-stop (0.55, #00ff00),
+                           color-stop (0.60, #ff0000),
+                           to (#000000)
+                                      );
+       color: #fff;
+    }
     
-    ".room\n"
-    "{\n"
-    "   background-image: -gtk-gradient(linear,\n"
-    "                                   left top,\n"
-    "                                   right top,\n"
-    "                       from (#0000ff),\n"
-    "                       color-stop (0.50, #00ff00),\n"
-    "                       to (#ff0000)\n"
-    "                                  );\n"
-    "   color: #fff;\n"
-    "}\n"
+    .room
+    {
+       background-image: -gtk-gradient(linear,
+                                       left top,
+                                       right top,
+                           from (#0000ff),
+                           color-stop (0.50, #00ff00),
+                           to (#ff0000)
+                                      );
+       color: #fff;
+    }
     
-    ".amb\n"
-    "{\n"
-    "   background-image: -gtk-gradient(linear,\n"
-    "                                   left top,\n"
-    "                                   right top,\n"
-    "                       from (#0000ff),\n"
-    "                       color-stop (0.15, #009999),\n"
-    "                       color-stop (0.50, #00ff00),\n"
-    "                       color-stop (0.85, #999900),\n"
-    "                       to (#ff0000)\n"
-    "                                  );\n"
-    "   color: #fff;\n"
-    "}\n"
+    .amb
+    {
+       background-image: -gtk-gradient(linear,
+                                       left top,
+                                       right top,
+                           from (#0000ff),
+                           color-stop (0.15, #009999),
+                           color-stop (0.50, #00ff00),
+                           color-stop (0.85, #999900),
+                           to (#ff0000)
+                                      );
+       color: #fff;
+    }
     
-    ".rainb\n"
-    "{\n"
-    "   background-image: -gtk-gradient(linear,\n"
-    "                                   left top,\n"
-    "                                   right top,\n"
-    "                       from (#660066),\n"
-    "                       color-stop (0.20, #0000ff),\n"
-    "                       color-stop (0.40, #00ff00),\n"
-    "                       color-stop (0.60, #ffcc00),\n"
-    "                       color-stop (0.80, #ff0066),\n"
-    "                       to (#ccccff)\n"
-    "                                  );\n"
-    "   color: #fff;\n"
-    "}\n"
+    .rainb
+    {
+       background-image: -gtk-gradient(linear,
+                                       left top,
+                                       right top,
+                           from (#660066),
+                           color-stop (0.20, #0000ff),
+                           color-stop (0.40, #00ff00),
+                           color-stop (0.60, #ffcc00),
+                           color-stop (0.80, #ff0066),
+                           to (#ccccff)
+                                      );
+       color: #fff;
+    }
     
-    ".lava\n"
-    "{\n"
-    "   background-image: -gtk-gradient(linear,\n"
-    "                                   left top,\n"
-    "                                   right top,\n"
-    "                       from (#FF3300),\n"
-    "                       color-stop (0.33, #FF6600),\n"
-    "                       color-stop (0.67, #FF9900),\n"
-    "                       to (#FFCC00)\n"
-    "                                  );\n"
-    "   color: #000;\n"
-    "}\n"
+    .lava
+    {
+       background-image: -gtk-gradient(linear,
+                                       left top,
+                                       right top,
+                           from (#FF3300),
+                           color-stop (0.33, #FF6600),
+                           color-stop (0.67, #FF9900),
+                           to (#FFCC00)
+                                      );
+       color: #000;
+    }
     
-    ".bleu\n"
-    "{\n"
-    "   background-image: -gtk-gradient(linear,\n"
-    "                                   left top,\n"
-    "                                   right top,\n"
-    "                       from (#000000),\n"
-    "                       color-stop (0.25, #003333),\n"
-    "                       color-stop (0.33, #336666),\n"
-    "                       color-stop (0.51, #99ffff),\n"
-    "                       color-stop (0.75, #ffeeee),\n"
-    "                       to (#ffffff)\n"
-    "                                  );\n"
-    "   color: #000;\n"
-    "}\n"
-    ".tiv\n"
-    "{\n"
-    "   background-image: -gtk-gradient(linear,\n"
-    "                                   left top,\n"
-    "                                   right top,\n"
-    "                       from (#0099ff),\n"
-    "                       to (#ff9966)\n"
-    "                                  );\n"
-    "   color: #000;\n"
-    "}\n"
-    ".hues\n"
-    "{\n"
-    "   background-image: -gtk-gradient(linear,\n"
-    "                                   left top,\n"
-    "                                   right top,\n"
-    "                       from (#000),\n"
-    "                       color-stop (0.16, #0000ff),\n"
-    "                       color-stop (0.24, #00cccc),\n"
-    "                       color-stop (0.33, #00ff00),\n"
-    "                       color-stop (0.50, #ff00ff),\n"
-    "                       color-stop (0.67, #ffff00),\n"
-    "                       color-stop (0.83, #ff0000),\n"
-    "                       to (#fff)\n"
-    "                                  );\n"
-    "   color: #000;\n"
-    "}\n"
-    ".rgi\n"
-    "{\n"
-    "   background-image: url(\"/home/pi/rgi.png\");\n"
-    "   background-color: transparent;\n"
-    "}\n"
-    ".cir\n"
-    "{\n"
-    "   background-image: url(\"/home/pi/cir.png\");\n"
-    "   background-color: transparent;\n"
-    "}\n"
-    ".mono\n"
-    "{\n"
-    "   background-image: url(\"/home/pi/mono.png\");\n"
-    "   background-color: transparent;\n"
-    "}\n"
-    ".veg\n"
-    "{\n"
-    "   background-image: url(\"/home/pi/rig.png\");\n"
-    "   background-color: transparent;\n"
-    "}\n"
-    ".gri\n"
-    "{\n"
-    "   background-image: url(\"/home/pi/gri.png\");\n"
-    "   background-color: transparent;\n"
-    "}\n"
-    ".igr\n"
-    "{\n"
-    "   background-image: url(\"/home/pi/xmas.png\");\n"
-    "   background-color: transparent;\n"
-    "}\n"
+    .bleu
+    {
+       background-image: -gtk-gradient(linear,
+                                       left top,
+                                       right top,
+                           from (#000000),
+                           color-stop (0.25, #003333),
+                           color-stop (0.33, #336666),
+                           color-stop (0.51, #99ffff),
+                           color-stop (0.75, #ffeeee),
+                           to (#ffffff)
+                                      );
+       color: #000;
+    }
+    .tiv
+    {
+       background-image: -gtk-gradient(linear,
+                                       left top,
+                                       right top,
+                           from (#0099ff),
+                           to (#ff9966)
+                                      );
+       color: #000;
+    }
+    .hues
+    {
+       background-image: -gtk-gradient(linear,
+                                       left top,
+                                       right top,
+                           from (#000),
+                           color-stop (0.16, #0000ff),
+                           color-stop (0.24, #00cccc),
+                           color-stop (0.33, #00ff00),
+                           color-stop (0.50, #ff00ff),
+                           color-stop (0.67, #ffff00),
+                           color-stop (0.83, #ff0000),
+                           to (#fff)
+                                      );
+       color: #000;
+    }
+    .rgi
+    {
+       background-image: url("/home/pi/rgi.png");
+       background-color: transparent;
+    }
+    .cir
+    {
+       background-image: url("/home/pi/cir.png");
+       background-color: transparent;
+    }
+    .mono
+    {
+       background-image: url("/home/pi/mono.png");
+       background-color: transparent;
+    }
+    .veg
+    {
+       background-image: url("/home/pi/rig.png");
+       background-color: transparent;
+    }
+    .gri
+    {
+       background-image: url("/home/pi/gri.png");
+       background-color: transparent;
+    }
+    .igr
+    {
+       background-image: url("/home/pi/xmas.png");
+       background-color: transparent;
+    }
     
-    ".bw\n"
-    "{\n"
-    "   background-image: url(\"/home/pi/bw.png\");\n"
-    "   background-color: transparent;\n"
-    "}\n"
+    .bw
+    {
+       background-image: url("/home/pi/bw.png");
+       background-color: transparent;
+    }
     
-    ".fire *, .hues *, .bleu *, .tiv *, .lava *, .pwr *, .pwrr *, .rainb *\n"
-    "{\n"
-    "   background-color: transparent;\n"
-    "   color: #000;\n"
-    "}\n"
-    ".fever *, .room *, .amb *\n"
-    "{\n"
-    "   background-color: transparent;\n"
-    "   color: #fff;\n"
-    "}\n"
-    ".rgi *, .cir *, .mono *, .veg *\n"
-    "{\n"
-    "   background-color: transparent;\n"
-    "   color: #000;\n"
-    "}\n"
-    ".gri *\n"
-    "{\n"
-    "   background-color: transparent;\n"
-    "   color: #cfc;\n"
-    "}\n"
+    .fire *, .hues *, .bleu *, .tiv *, .lava *, .pwr *, .pwrr *, .rainb *
+    {
+       background-color: transparent;
+       color: #000;
+    }
+    .fever *, .room *, .amb *
+    {
+       background-color: transparent;
+       color: #fff;
+    }
+    .rgi *, .cir *, .mono *, .veg *
+    {
+       background-color: transparent;
+       color: #000;
+    }
+    .gri *
+    {
+       background-color: transparent;
+       color: #cfc;
+    }
     
-    ".igr *\n"
-    "{\n"
-    "   background-color: transparent;\n"
-    "   color: #030;\n"
-    "   font-weight: bold;\n"
-    "}\n"
+    .igr *
+    {
+       background-color: transparent;
+       color: #030;
+       font-weight: bold;
+    }
     
-    ".bw *\n"
-    "{\n"
-    "   background-color: transparent;\n"
-    "   color: #000;\n"
-    "   font-weight: bold;\n"
-    "}\n"
+    .bw *
+    {
+       background-color: transparent;
+       color: #000;
+       font-weight: bold;
+    }
     
-    ".tinytxt, .tinytxt *\n"
-    "{\n"
-    "   font-size: 22px;\n"
-    "}\n"
-    ".smtxt, .smtxt *\n"
-    "{\n"
-    "   font-size: 28px;\n"
-    "}\n"
-    ".ifon, .ifon *\n"
-    "{\n"
-    "   background-color: #9966ff;\n"
-    "   color: #000;\n"
-    "}\n"
-    ".vfon, .vfon *\n"
-    "{\n"
-    "   background-color: #ffff99;\n"
-    "   color: #000;\n"
-    "}\n"
-    ;
+    .tinytxt, .tinytxt *
+    {
+       font-size: 22px;
+    }
+    .smtxt, .smtxt *
+    {
+       font-size: 28px;
+    }
+    .ifon, .ifon *
+    {
+       background-color: #9966ff;
+       color: #000;
+    }
+    .vfon, .vfon *
+    {
+       background-color: #ffff99;
+       color: #000;
+    }
+    
+    .monbig *
+    {
+       background-color: transparent;
+    }
+    
+    .monbig
+    {
+       background-image: url("/home/pi/mono.png");
+       background-color: transparent;
+    }
+)GLOBCSS";
+
     
