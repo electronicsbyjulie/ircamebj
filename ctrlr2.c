@@ -2763,12 +2763,14 @@ void chmap_menu(GtkWidget *widget, GdkEventKey *key, int user_data)
     g_signal_connect(menu_btnrs, "button-press-event",
                       G_CALLBACK (btnrs_click), NULL);
     
-    g_signal_connect(menu_btnxms, "button-press-event",
-                      G_CALLBACK (btnxms_click), NULL);
+    if (month == 12)
+    {
+        g_signal_connect(menu_btnxms, "button-press-event",
+                          G_CALLBACK (btnxms_click), NULL);
     
-    g_signal_connect(menu_btnib, "button-press-event",
-                      G_CALLBACK (btnib_click), NULL);
-    
+        g_signal_connect(menu_btnib, "button-press-event",
+                          G_CALLBACK (btnib_click), NULL);
+    }
       
     
     printf("Showing slideshow window.\n");
