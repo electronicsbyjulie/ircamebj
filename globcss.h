@@ -235,16 +235,46 @@ char* global_css = R"GLOBCSS(
        color: #000;
     }
     
-    .monbig *
+    .rgibig *, .cirbig *, .monbig *, .vegbig *, .rsbig *
     {
+       background-color: transparent;
+    }
+    
+    .rgibig
+    {
+       background-image: url("/home/pi/rgi.png");
+       background-size: cover;
+       background-color: transparent;
+    }
+    
+    .cirbig
+    {
+       background-image: url("/home/pi/cir.png");
+       background-size: cover;
        background-color: transparent;
     }
     
     .monbig
     {
        background-image: url("/home/pi/mono.png");
+       background-size: cover;
        background-color: transparent;
     }
+    
+    .vegbig
+    {
+       background-image: url("/home/pi/rig.png");
+       background-size: cover;
+       background-color: transparent;
+    }
+    
+    .rsbig
+    {
+       background-image: url("/home/pi/gri.png");
+       background-size: cover;
+       background-color: transparent;
+    }
+    
 )GLOBCSS";
 
     
