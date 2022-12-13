@@ -557,7 +557,7 @@ void raspistill_init()
                 : get_process_pid("raspistill");
     // printf("Camera PID is %i my PID is %i\n", cam_pid, getpid());
     
-    sprintf(cmd, "sudo renice -n 5 -p %i", cam_pid);
+    sprintf(cmd, "sudo renice -n 7 -p %i", cam_pid);
     system(cmd);
     
     if (shutter > 427503)
@@ -1878,8 +1878,7 @@ flash_II(void)
 #endif
    
 #if _SIMULSHOT
-    // ampersand = "&";
-    ampersand = "";
+    ampersand = "&";
 #else
     // If taking 1080p, wait for processing before allow more pictures
     ampersand = "";
@@ -1943,8 +1942,9 @@ flash_II(void)
     FILE* fsh = fopen(tmpsh, "w");
     
     fprintf(fsh, "while ps -ef | grep imgcomb | grep -v grep > /dev/null; do sleep 1; done\n");
-    fprintf(fsh, "while [ ! -s %s ]\ndo\n", fnh);
     fprintf(fsh, "%s\n", cmdbuf);
+    fprintf(fsh, "while [ ! -s %s ]\ndo\n", fnh);
+    fprintf(fsh, "sleep 0.25\n");
     fprintf(fsh, "done\n");
     fprintf(fsh, "while ps -ef | grep imgcomb | grep -v grep > /dev/null; do sleep 1; done\n");
     
@@ -1994,8 +1994,9 @@ flash_II(void)
     // printf("%s\n", cmdbuf);
     // system(cmdbuf);
     
-    fprintf(fsh, "while [[ ! -s %s ]]\ndo\n", fn);
     fprintf(fsh, "%s\n", cmdbuf);
+    fprintf(fsh, "while [[ ! -s %s ]]\ndo\n", fn);
+    fprintf(fsh, "sleep 0.25\n");
     fprintf(fsh, "done\n");
     
     fprintf(fsh, "sudo rm /tmp/%s\n", tmpfn);
@@ -3848,7 +3849,7 @@ int main (int argc, char **argv)
     
     int mypid = getpid();
     char cmdbuf[256];
-    sprintf(cmdbuf, "sudo renice -n -7 -p %i", mypid);
+    sprintf(cmdbuf, "sudo renice -n -18 -p %i", mypid);
     system(cmdbuf);
     
     last_flash = time(NULL);
