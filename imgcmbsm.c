@@ -1194,6 +1194,9 @@ int main(char argc, char** argv)
 				    bdat[bx2] = rgb[2];
 		        }
 			}*/
+			
+			tempmin -= 2;
+			tempmax += 2;
 
 			for (int y=0; y<_THERM_H; y++)
 			{	int ly = y * wtmp;

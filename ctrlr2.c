@@ -1131,6 +1131,8 @@ int thermdraw()
         }
     }
     
+    thmax += 2;
+    thmin -= 2;
     
     if (vid_on)
     {   GtkStyleContext *context = gtk_widget_get_style_context(recbtn);
