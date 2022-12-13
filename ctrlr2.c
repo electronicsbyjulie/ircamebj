@@ -169,6 +169,15 @@ GtkWidget *menu_btnrs;
 GtkWidget *menu_btnxms;
 GtkWidget *menu_btnib;
 
+GtkWidget *menu_fire;
+GtkWidget *menu_rnbo;
+GtkWidget *menu_fevr;
+GtkWidget *menu_room;
+GtkWidget *menu_amb;
+GtkWidget *menu_hue;
+GtkWidget *menu_bleu;
+GtkWidget *menu_tiv;
+
 GtkWidget* reslbl;
 GtkWidget* shutlbl;
 GtkWidget* explbl;
@@ -2867,13 +2876,242 @@ void thbtn_update(void)
 static gboolean thbtn_click(GtkWidget      *widget,
                            GdkEventMotion *event,
                            gpointer        data)
-{ therm_pal++;
+{ /*therm_pal++;
   if (therm_pal > _THM_MAX) therm_pal = 0;
   
   thbtn_update();
-  save_settings();
+  save_settings();*/
+  
+  therm_menu();
   
   return TRUE;
+}
+
+static gboolean mnufire_click(GtkWidget      *widget,
+                              GdkEventMotion *event,
+                              gpointer        data)
+{
+    therm_pal = 0;
+    exit_menu(widget, event, data);
+    thbtn_update();
+    save_settings();
+}
+
+static gboolean mnurnbo_click(GtkWidget      *widget,
+                              GdkEventMotion *event,
+                              gpointer        data)
+{
+    therm_pal = 1;
+    exit_menu(widget, event, data);
+    thbtn_update();
+    save_settings();
+}
+
+static gboolean mnufevr_click(GtkWidget      *widget,
+                              GdkEventMotion *event,
+                              gpointer        data)
+{
+    therm_pal = 2;
+    exit_menu(widget, event, data);
+    thbtn_update();
+    save_settings();
+}
+
+static gboolean mnuroom_click(GtkWidget      *widget,
+                              GdkEventMotion *event,
+                              gpointer        data)
+{
+    therm_pal = 3;
+    exit_menu(widget, event, data);
+    thbtn_update();
+    save_settings();
+}
+
+static gboolean mnuamb_click(GtkWidget      *widget,
+                              GdkEventMotion *event,
+                              gpointer        data)
+{
+    therm_pal = 4;
+    exit_menu(widget, event, data);
+    thbtn_update();
+    save_settings();
+}
+
+static gboolean mnuhue_click(GtkWidget      *widget,
+                              GdkEventMotion *event,
+                              gpointer        data)
+{
+    therm_pal = 5;
+    exit_menu(widget, event, data);
+    thbtn_update();
+    save_settings();
+}
+
+static gboolean mnubleu_click(GtkWidget      *widget,
+                              GdkEventMotion *event,
+                              gpointer        data)
+{
+    therm_pal = 6;
+    exit_menu(widget, event, data);
+    thbtn_update();
+    save_settings();
+}
+
+static gboolean mnutiv_click(GtkWidget      *widget,
+                              GdkEventMotion *event,
+                              gpointer        data)
+{
+    therm_pal = 7;
+    exit_menu(widget, event, data);
+    thbtn_update();
+    save_settings();
+}
+
+void therm_menu(GtkWidget *widget, GdkEventKey *key, int user_data)
+{
+    GtkStyleContext *context;
+    
+    printf("Turning off camera.\n");
+    cam_on = 0;
+    // slsh_lsidx = user_data;
+    raspistill_end_misery("displaying thermal menu");
+  
+    printf("Creating menu window.\n");
+    menu = gtk_application_window_new (app);
+    gtk_window_set_title (GTK_WINDOW (menu), "Menu");
+    
+    printf("Full-screening menu window.\n");
+    gtk_window_fullscreen(GTK_WINDOW(menu));
+    gtk_container_set_border_width (GTK_CONTAINER (menu), 0);
+    
+    printf("Connecting Esc keypress event.\n");
+    g_signal_connect (menu, "key-press-event",
+                    G_CALLBACK (window_key_pressed), NULL);
+
+    int rows = 4;
+    
+    // Big grid
+    printf("Creating menu grid.\n");
+    menu_grid = gtk_grid_new();
+    gtk_widget_set_size_request(menu_grid, SCR_RES_X, SCR_RES_Y);
+    gtk_container_add (GTK_CONTAINER (menu), menu_grid);
+    
+    int w, h;
+    printf("Getting size.\n");
+    gtk_window_get_size(menu, &w, &h);
+    
+    printf("Adding buttons.\n");
+    menu_fire = gtk_button_new_with_label("Thermal: Fire");
+    gtk_grid_attach(menu_grid, menu_fire, 0, 0, 1, 1);
+    context = gtk_widget_get_style_context(menu_fire);
+    gtk_style_context_add_class(context, "fire");
+    
+    menu_rnbo = gtk_button_new_with_label("Thermal: Rainbow");
+    gtk_grid_attach(menu_grid, menu_rnbo, 1, 0, 1, 1);
+    context = gtk_widget_get_style_context(menu_rnbo);
+    gtk_style_context_add_class(context, "rainb");
+    
+    menu_fevr = gtk_button_new_with_label("Thermal: Fever");
+    gtk_grid_attach(menu_grid, menu_fevr, 0, 1, 1, 1);
+    context = gtk_widget_get_style_context(menu_fevr);
+    gtk_style_context_add_class(context, "fever");
+    
+    menu_room = gtk_button_new_with_label("Thermal: Room");
+    gtk_grid_attach(menu_grid, menu_room, 1, 1, 1, 1);
+    context = gtk_widget_get_style_context(menu_room);
+    gtk_style_context_add_class(context, "room");
+    
+    menu_amb = gtk_button_new_with_label("Thermal: Ambient");
+    gtk_grid_attach(menu_grid, menu_amb, 0, 2, 1, 1);
+    context = gtk_widget_get_style_context(menu_amb);
+    gtk_style_context_add_class(context, "amb");
+    
+    menu_room = gtk_button_new_with_label("Thermal: Hues");
+    gtk_grid_attach(menu_grid, menu_room, 1, 2, 1, 1);
+    context = gtk_widget_get_style_context(menu_room);
+    gtk_style_context_add_class(context, "hues");
+    
+    menu_bleu = gtk_button_new_with_label("Thermal: Bleu");
+    gtk_grid_attach(menu_grid, menu_bleu, 0, 3, 1, 1);
+    context = gtk_widget_get_style_context(menu_bleu);
+    gtk_style_context_add_class(context, "bleu");
+    
+    menu_tiv = gtk_button_new_with_label("Thermal: TIV");
+    gtk_grid_attach(menu_grid, menu_tiv, 1, 3, 1, 1);
+    context = gtk_widget_get_style_context(menu_tiv);
+    gtk_style_context_add_class(context, "tiv");
+    
+    int vpad = 1;
+    
+    gtk_widget_set_size_request(menu_fire, 
+                                SCR_RES_X/2, 
+                                SCR_RES_Y/rows-vpad
+                               );
+    
+    gtk_widget_set_size_request(menu_rnbo, 
+                                SCR_RES_X/2, 
+                                SCR_RES_Y/rows-vpad
+                               );
+    
+    gtk_widget_set_size_request(menu_fevr, 
+                                SCR_RES_X/2, 
+                                SCR_RES_Y/rows-vpad
+                               );
+    
+    gtk_widget_set_size_request(menu_amb, 
+                                SCR_RES_X/2, 
+                                SCR_RES_Y/rows-vpad
+                               );
+    
+    gtk_widget_set_size_request(menu_hue, 
+                                SCR_RES_X/2, 
+                                SCR_RES_Y/rows-vpad
+                               );
+    
+    gtk_widget_set_size_request(menu_bleu, 
+                                SCR_RES_X/2, 
+                                SCR_RES_Y/rows-vpad
+                               );
+    
+    gtk_widget_set_size_request(menu_room, 
+                                SCR_RES_X/2, 
+                                SCR_RES_Y/rows-vpad
+                               );
+    
+    gtk_widget_set_size_request(menu_tiv, 
+                                SCR_RES_X/2, 
+                                SCR_RES_Y/rows-vpad
+                               );
+    
+    
+    printf("Connecting button events.\n");
+    
+    g_signal_connect(menu_fire, "button-press-event",
+                      G_CALLBACK (mnufire_click), NULL);
+    
+    g_signal_connect(menu_rnbo, "button-press-event",
+                      G_CALLBACK (mnurnbo_click), NULL);
+    
+    g_signal_connect(menu_fevr, "button-press-event",
+                      G_CALLBACK (mnufevr_click), NULL);
+    
+    g_signal_connect(menu_room, "button-press-event",
+                      G_CALLBACK (mnuroom_click), NULL);
+    
+    g_signal_connect(menu_amb, "button-press-event",
+                      G_CALLBACK (mnuamb_click), NULL);
+    
+    g_signal_connect(menu_hue, "button-press-event",
+                      G_CALLBACK (mnuhue_click), NULL);
+    
+    g_signal_connect(menu_bleu, "button-press-event",
+                      G_CALLBACK (mnubleu_click), NULL);
+    
+    g_signal_connect(menu_tiv, "button-press-event",
+                      G_CALLBACK (mnutiv_click), NULL);
+    
+    printf("Showing slideshow window.\n");
+    gtk_widget_show_all(menu);
 }
 
 

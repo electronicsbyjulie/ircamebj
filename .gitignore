@@ -52,5 +52,21 @@ Mkfile.old
 dkms.conf
 
 # Project-specific
-devbox
+dev*
+.*
+*.dat
+*.log
+*.bmp
+Pictures
+ctrlr
+imgcomb
+lastgdb
+readshm
+settings
+thalign
+thaw
+thermcam2
+
+
+
 
