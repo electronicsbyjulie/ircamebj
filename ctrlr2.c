@@ -3026,9 +3026,9 @@ void therm_menu(GtkWidget *widget, GdkEventKey *key, int user_data)
     context = gtk_widget_get_style_context(menu_amb);
     gtk_style_context_add_class(context, "amb");
     
-    menu_room = gtk_button_new_with_label("Thermal: Hues");
-    gtk_grid_attach(menu_grid, menu_room, 1, 2, 1, 1);
-    context = gtk_widget_get_style_context(menu_room);
+    menu_hue = gtk_button_new_with_label("Thermal: Hues");
+    gtk_grid_attach(menu_grid, menu_hue, 1, 2, 1, 1);
+    context = gtk_widget_get_style_context(menu_hue);
     gtk_style_context_add_class(context, "hues");
     
     menu_bleu = gtk_button_new_with_label("Thermal: Bleu");
