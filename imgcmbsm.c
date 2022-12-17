@@ -1119,6 +1119,22 @@ int main(char argc, char** argv)
 			            gdat[bx] = g;
 			            bdat[bx] = b;
 			        }
+			    
+			        if (cmapping == _igr && swnm >= 600)
+			        {
+			            r = rdat[bx];
+			            g = gdat[bx];
+			            b = bdat[bx];
+			            
+			            float r_b = r - b;
+			            r += 0.333 * r_b;
+			            if (r < 0) r = 0;
+			            if (r > 255) r = 255;
+			            
+			            rdat[bx] = r;
+			            gdat[bx] = g;
+			            bdat[bx] = b;
+			        }
 			    }
 		    }
 		}
