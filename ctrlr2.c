@@ -86,7 +86,7 @@ int imp, impt;
 
 char ltfn[256], ltfnh[256];
 
-#define _MAX_NOIRTYPE 6
+#define _MAX_NOIRTYPE 8
 
 char* ntdisp[_MAX_NOIRTYPE+1] = 
     {   "rgi", 
@@ -95,7 +95,9 @@ char* ntdisp[_MAX_NOIRTYPE+1] =
         "veg", 
         "redsky",
         "xmas",
-        "bluwht"
+        "bluwht",
+        "600nm",
+        "veg600"
     };
 // char* ntdisph[_MAX_NOIRTYPE+1] = {"rgih", "cirh", "monh", "vegh", "grih"};
 char* ntdisph[_THM_MAX+1] = 
@@ -168,6 +170,8 @@ GtkWidget *menu_btnveg;
 GtkWidget *menu_btnrs;
 GtkWidget *menu_btnxms;
 GtkWidget *menu_btnib;
+GtkWidget *menu_btn600;
+GtkWidget *menu_btnv6;
 
 GtkWidget *menu_fire;
 GtkWidget *menu_rnbo;
@@ -1950,12 +1954,14 @@ flash_II(void)
     sprintf(tmpsh, "/tmp/temp%d.sh", (unsigned)time(NULL) % 10);
     FILE* fsh = fopen(tmpsh, "w");
     
+    fprintf(fsh, "pkill ctrlr\n");
     fprintf(fsh, "while ps -ef | grep imgcomb | grep -v grep > /dev/null; do sleep 1; done\n");
     fprintf(fsh, "%s\n", cmdbuf);
     fprintf(fsh, "while [ ! -s %s ]\ndo\n", fnh);
     fprintf(fsh, "sleep 0.25\n");
     fprintf(fsh, "done\n");
     fprintf(fsh, "while ps -ef | grep imgcomb | grep -v grep > /dev/null; do sleep 1; done\n");
+    fprintf(fsh, "/bin/bash ./gdbkp.sh &\n");
     
     
     
@@ -1985,6 +1991,14 @@ flash_II(void)
         noirarg = "-bw";    // blue and white
         break;
         
+        case 7:
+        noirarg = "-igr -swnm 600";   // 600nm normal.
+        break;
+        
+        case 8:        
+        noirarg = "-gir -swnm 600";   // 600nm veg.
+        break;
+        
         case 1:
         default:
         noirarg = "-r";     // cir
@@ -2011,6 +2025,21 @@ flash_II(void)
     fprintf(fsh, "sudo rm /tmp/%s\n", tmpfn);
     
     fclose(fsh);
+  
+    system("gpio write 4 1");
+    system("gpio write 0 1");
+    firlit = fvlit = 0;
+
+    // log_action("snapshot end\n\n");
+
+    cairo_destroy (cr);
+
+    flashd = 0;
+
+    if (have_ip && !trupl)
+    { 
+        g_timeout_add_seconds(15, G_CALLBACK (force_gdbkp), NULL);
+    }
     
     sprintf(cmdbuf, "nice -n 15 /bin/bash %s &", tmpsh);
     system(cmdbuf);
@@ -2030,23 +2059,6 @@ flash_II(void)
     pxoff = lxoff;
 #endif
 
-
-  
-
-  }
-  
-  system("gpio write 4 1");
-  system("gpio write 0 1");
-  firlit = fvlit = 0;
-  
-  // log_action("snapshot end\n\n");
-
-  cairo_destroy (cr);
-  
-  flashd = 0;
-  
-  if (have_ip && !trupl)
-  {  g_timeout_add_seconds(15, G_CALLBACK (force_gdbkp), NULL);
   }
   
   // if (tmlaps) g_timeout_add_seconds(tmlaps, G_CALLBACK (flash), NULL);
@@ -2500,6 +2512,28 @@ void noirbtn_update(void)
       gtk_style_context_add_class(context, "bw");
       gtk_button_set_label(noirbtn, "InfraBlue");
       break;
+      
+      case 7:
+      gtk_style_context_remove_class(context, "cir");
+      gtk_style_context_remove_class(context, "mono");
+      gtk_style_context_remove_class(context, "rgi"); 
+      gtk_style_context_remove_class(context, "gri");      
+      gtk_style_context_remove_class(context, "veg"); 
+      gtk_style_context_remove_class(context, "igr");
+      gtk_style_context_remove_class(context, "bw");
+      gtk_button_set_label(noirbtn, "600nm");
+      break;
+      
+      case 8:
+      gtk_style_context_remove_class(context, "cir");
+      gtk_style_context_remove_class(context, "mono");
+      gtk_style_context_remove_class(context, "rgi"); 
+      gtk_style_context_remove_class(context, "gri");      
+      gtk_style_context_remove_class(context, "veg"); 
+      gtk_style_context_remove_class(context, "igr");
+      gtk_style_context_remove_class(context, "bw");
+      gtk_button_set_label(noirbtn, "Veg600");
+      break;
   
       case 1:
       default:
@@ -2608,6 +2642,28 @@ btnib_click(GtkWidget *widget,
     save_settings();
 }
 
+static gboolean
+btn600_click(GtkWidget *widget,
+                       GdkEventMotion *event,
+                       gpointer        data)
+{ 
+    ch_mapping = 7;
+    exit_menu(widget, event, data);
+    noirbtn_update();
+    save_settings();
+}
+
+static gboolean
+btnv6_click(GtkWidget *widget,
+                       GdkEventMotion *event,
+                       gpointer        data)
+{ 
+    ch_mapping = 8;
+    exit_menu(widget, event, data);
+    noirbtn_update();
+    save_settings();
+}
+
 
 static gboolean noirbtn_click(GtkWidget      *widget,
                            GdkEventMotion *event,
@@ -2679,21 +2735,25 @@ void chmap_menu(GtkWidget *widget, GdkEventKey *key, int user_data)
     context = gtk_widget_get_style_context(menu_btnmon);
     gtk_style_context_add_class(context, "monbig");
     
-    GtkWidget* menu_spacer1 = gtk_button_new_with_label("");
-    gtk_grid_attach(menu_grid, menu_spacer1, 0, 1, 1, 2);
-    
     menu_btnveg = gtk_button_new_with_label("Veg");
-    gtk_grid_attach(menu_grid, menu_btnveg, 1, 1, 2, 1);
+    gtk_grid_attach(menu_grid, menu_btnveg, 0, 1, 2, 1);
     context = gtk_widget_get_style_context(menu_btnveg);
     gtk_style_context_add_class(context, "vegbig");
     
     menu_btnrs = gtk_button_new_with_label("Rdsky");
-    gtk_grid_attach(menu_grid, menu_btnrs, 3, 1, 2, 1);
+    gtk_grid_attach(menu_grid, menu_btnrs, 2, 1, 2, 1);
     context = gtk_widget_get_style_context(menu_btnrs);
     gtk_style_context_add_class(context, "rsbig");
     
-    GtkWidget* menu_spacer2 = gtk_button_new_with_label("");
-    gtk_grid_attach(menu_grid, menu_spacer2, 5, 1, 1, 2);
+    menu_btn600 = gtk_button_new_with_label("600nm");
+    gtk_grid_attach(menu_grid, menu_btn600, 4, 1, 2, 1);
+    context = gtk_widget_get_style_context(menu_btn600);
+    gtk_style_context_add_class(context, "l600");
+    
+    menu_btnv6 = gtk_button_new_with_label("Veg600");
+    gtk_grid_attach(menu_grid, menu_btnv6, 4, 2, 2, 1);
+    context = gtk_widget_get_style_context(menu_btnv6);
+    gtk_style_context_add_class(context, "v600");
     
     if (month == 12)
     {
@@ -2733,8 +2793,23 @@ void chmap_menu(GtkWidget *widget, GdkEventKey *key, int user_data)
                                 SCR_RES_X/3, 
                                 SCR_RES_Y/3
                                );
+                               
+    gtk_widget_set_size_request(menu_btnrs, 
+                                SCR_RES_X/3, 
+                                SCR_RES_Y/3
+                               );
+                               
+    gtk_widget_set_size_request(menu_btn600, 
+                                SCR_RES_X/3, 
+                                SCR_RES_Y/3
+                               );
+                               
+    gtk_widget_set_size_request(menu_btnv6, 
+                                SCR_RES_X/3, 
+                                SCR_RES_Y/3
+                               );
     
-    gtk_widget_set_size_request(menu_spacer1, 
+    /*gtk_widget_set_size_request(menu_spacer1, 
                                 SCR_RES_X/6, 
                                 SCR_RES_Y/3
                                );
@@ -2742,7 +2817,7 @@ void chmap_menu(GtkWidget *widget, GdkEventKey *key, int user_data)
     gtk_widget_set_size_request(menu_spacer2, 
                                 SCR_RES_X/6, 
                                 SCR_RES_Y/3
-                               );
+                               );*/
     
     if (month == 12)
     {
@@ -2774,6 +2849,12 @@ void chmap_menu(GtkWidget *widget, GdkEventKey *key, int user_data)
     
     g_signal_connect(menu_btnrs, "button-press-event",
                       G_CALLBACK (btnrs_click), NULL);
+                      
+    g_signal_connect(menu_btn600, "button-press-event",
+                      G_CALLBACK (btn600_click), NULL);
+                      
+    g_signal_connect(menu_btnv6, "button-press-event",
+                      G_CALLBACK (btnv6_click), NULL);
     
     if (month == 12)
     {
@@ -4070,6 +4151,14 @@ flash_once(void)
     return FALSE;
 }
 
+gboolean refresh_previews()
+{
+    gtk_widget_queue_draw(preview_area);
+    gtk_widget_queue_draw(previewh_area);
+    
+    return TRUE;
+}
+
 int main (int argc, char **argv)
 {   
     int ps = is_process_running("ctrlr");
@@ -4215,8 +4304,17 @@ int main (int argc, char **argv)
         fgets(fnhth, 256, fnfp);
         fclose(fnfp);
         
-        list_add(fnth, 0);
         list_add(fnhth, 1);
+        list_add(fnth, 0);
+        
+        while (is_process_running("imgcomb")) usleep(50000);
+    
+        gpixph = draw_image_widget(gwidgetph, fnhth, 0);
+        gpixp  = draw_image_widget(gwidgetp, fnth, 0);
+        gtk_widget_queue_draw(previewh_area);
+        gtk_widget_queue_draw(preview_area);
+        
+        g_timeout_add(503, G_CALLBACK (refresh_previews), NULL);
     }
 
   return status;

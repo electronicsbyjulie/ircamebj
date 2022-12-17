@@ -97,6 +97,8 @@ int histmx = 0;
 
 int therm_mode = _THM_HUE;
 
+int swnm = 550;
+
 typedef struct
 {
     unsigned int x;
@@ -680,6 +682,8 @@ int main(char argc, char** argv)
 		if (!strcmp(argv[i], "-irg"))	  cmapping = _irg;
 		if (!strcmp(argv[i], "-igr"))	  cmapping = _igr;
 		if (!strcmp(argv[i], "-bw"))	  { cmapping = _rgi; bluewhite = 1; }
+		
+		if (!strcmp(argv[i], "-swnm"))    { swnm = atoi(argv[i+1]); found++; }
 	}
 	
 	// if (therm_mode == _THM_FIRE) printf("fire\n");
@@ -1086,7 +1090,7 @@ int main(char argc, char** argv)
 			            bdat[bx] = b;
 			        }
 			        
-			        if (cmapping == _igr)
+			        if (cmapping == _igr && swnm < 600)
 			        {   r = rdat[bx];
 			            g = gdat[bx];
 			            b = bdat[bx];
@@ -1098,6 +1102,23 @@ int main(char argc, char** argv)
 			            bdat[bx] = b;
 			        }
 			    
+			        if (cmapping == _igr && swnm >= 600)
+			        {
+			            r = rdat[bx];
+			            g = gdat[bx];
+			            b = bdat[bx];
+			            
+			            float g_b = g - b;
+			            b -= 0.333 * g_b;
+			            /*if (g_b > 0) g += 0.333 * g_b;
+			            if (g > 255) g = 255;*/
+			            if (b < 0) b = 0;
+			            if (b > 255) b = 255;
+			            
+			            rdat[bx] = r;
+			            gdat[bx] = g;
+			            bdat[bx] = b;
+			        }
 			    }
 		    }
 		}
@@ -1384,9 +1405,18 @@ int main(char argc, char** argv)
 						    
 						    if (wr > 255) wr = 255;
 						    
-						    bdat[bx2] = 0.5*bdat[bx2] + 0.5*gdat[bx2];
-						    gdat[bx2] = rdat[bx2];
-						    rdat[bx2] = wr;
+						    if (swnm < 580)
+						    {
+						        bdat[bx2] = 0.5*bdat[bx2] + 0.5*gdat[bx2];
+						        gdat[bx2] = rdat[bx2];
+						        rdat[bx2] = wr;
+					        }
+					        else
+					        {
+						        bdat[bx2] = 0.5*bdat[bx2] + 0.5*gdat[bx2];
+						        gdat[bx2] = 0.5*gdat[bx2] + 0.5*rdat[bx2];
+						        rdat[bx2] = wr;
+					        }
 						}
 						else
 						{   for (int i=0; i<4; i++)
