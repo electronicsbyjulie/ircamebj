@@ -1961,7 +1961,7 @@ flash_II(void)
     fprintf(fsh, "sleep 0.25\n");
     fprintf(fsh, "done\n");
     fprintf(fsh, "while ps -ef | grep imgcomb | grep -v grep > /dev/null; do sleep 1; done\n");
-    fprintf(fsh, "/bin/bash ./gdbkp.sh &\n");
+    if (have_ip && !trupl) fprintf(fsh, "/bin/bash ./gdbkp.sh &\n");
     
     
     
@@ -2758,12 +2758,12 @@ void chmap_menu(GtkWidget *widget, GdkEventKey *key, int user_data)
     if (month == 12)
     {
         menu_btnxms = gtk_button_new_with_label("Xmas");
-        gtk_grid_attach(menu_grid, menu_btnxms, 1, 2, 2, 1);
+        gtk_grid_attach(menu_grid, menu_btnxms, 0, 2, 2, 1);
         context = gtk_widget_get_style_context(menu_btnxms);
         gtk_style_context_add_class(context, "xmsbig");
     
         menu_btnib = gtk_button_new_with_label("InfrBlu");
-        gtk_grid_attach(menu_grid, menu_btnib, 3, 2, 2, 1);
+        gtk_grid_attach(menu_grid, menu_btnib, 2, 2, 2, 1);
         context = gtk_widget_get_style_context(menu_btnib);
         gtk_style_context_add_class(context, "ibbig");
     }
