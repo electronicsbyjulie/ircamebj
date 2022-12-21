@@ -1109,11 +1109,18 @@ int main(char argc, char** argv)
 			            b = bdat[bx];
 			            
 			            float g_b = g - b;
+			            float r_b = r - b;
+			            float r_g = r - g;
+			            
+			            // IR-Vis contrast.
 			            b -= 0.333 * g_b;
-			            /*if (g_b > 0) g += 0.333 * g_b;
-			            if (g > 255) g = 255;*/
 			            if (b < 0) b = 0;
 			            if (b > 255) b = 255;
+			            
+			            // IR-FR contrast.
+			            if (r > g && r > b) g -= r_g * r_b / 128;
+			            if (g < 0) g = 0;
+			            if (g > 255) g = 255;
 			            
 			            rdat[bx] = r;
 			            gdat[bx] = g;
