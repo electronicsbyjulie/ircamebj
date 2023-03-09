@@ -35,10 +35,12 @@ If you have not done so yet, go through the Pi first run setup and set the local
 something unique to your wifi network. Disable overscan, pixel doubling, and screen blanking. If you have not enabled the camera interface,
 do so now. Enable SSH, VNC, SPI, I2C, Serial port. Optionally you can set the desktop preferences: uncheck wastebasket and mounted disks,
 and increase system font to about 24 pixels. In File Manager settings, select Open files with single click, Don't ask options on launch
-exec, and Don't show available options for removable media. Open a terminal (Ctrl+Alt+T) and run the following command:
+exec, and Don't show available options for removable media. Open a terminal (Ctrl+Alt+T) and run the following commands:
 
 ```
-sudo chmod +775 ~/*.sh
+cd ircamebj
+
+sudo chmod +775 *.sh
 ```
 
 Ensure that you have a working internet connection, and then run this command:
@@ -55,14 +57,13 @@ sudo apt-get update
 sudo apt-get install -y gedit rclone unclutter libgtk-3-dev libi2c-dev libjpeg-dev libpng-dev gpac
 ```
 
-Once everything is finished, you can run `~/ircaminstall.sh`. It will download the source files for the camera app and compile them into
-executables. It will prompt you for the PiTFT display setup; this is your touchscreen. When propmted, select option 4, then option 3,
-then wait, then answer N, Y, wait again, and answer Y. The unit will then reboot into camera mode. Once the camera app comes up, first
-make sure that there is a NoIR image shown and a thermal image overlaid on it. You can wave your hand in front of the unit to check the
-thermal sensor. If anything is not working, your wiring might be incorrect. If everything works, press the Esc key and open a terminal
-with Ctrl+Alt+T. Place the thermal sensor against something with a uniform temperature like the side of an empty cardboard or plastic box.
-(Don't rely on a wall to be thermally uniform, as there may be conduits or pipes inside.) Run the following command and wait about 5
-minutes for it to finish:
+Once everything is finished, you can run `ircaminstall.sh`. It will compile the executables for the camera, then it will prompt you
+for the PiTFT display setup; this is your touchscreen. When propmted, select option 4, then option 3, then wait, then answer N, Y, wait
+again, and answer Y. The unit will then reboot into camera mode. Once the camera app comes up, first make sure that there is a NoIR
+image shown and a thermal image overlaid on it. You can wave your hand in front of the unit to check the thermal sensor. If anything
+is not working, your wiring might be incorrect. If everything works, press the Esc key and open a terminal with Ctrl+Alt+T. Place the
+thermal sensor against something with a uniform temperature like the side of an empty cardboard or plastic box. (Don't rely on a wall
+to be thermally uniform, as there may be conduits or pipes inside.) Run the following command and wait about 5 minutes for it to finish:
 
 ```
 ~/ctrlr thc
