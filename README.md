@@ -37,16 +37,23 @@ do so now. Enable SSH, VNC, SPI, I2C, Serial port. Optionally you can set the de
 and increase system font to about 24 pixels. In File Manager settings, select Open files with single click, Don't ask options on launch
 exec, and Don't show available options for removable media. Open a terminal (Ctrl+Alt+T) and run the following command:
 
-`sudo chmod +775 ~/*.sh`
+```
+sudo chmod +775 ~/*.sh
+```
 
 Ensure that you have a working internet connection, and then run this command:
 
-`sudo rpi-update`
+```
+sudo rpi-update
+```
 
 Manually reboot the system. When it comes back up, open a terminal again and run:
 
-`sudo apt-get update`
-`sudo apt-get install -y gedit rclone unclutter libgtk-3-dev libi2c-dev libjpeg-dev libpng-dev gpac`
+```
+sudo apt-get update
+
+sudo apt-get install -y gedit rclone unclutter libgtk-3-dev libi2c-dev libjpeg-dev libpng-dev gpac
+```
 
 Once everything is finished, you can run `~/ircaminstall.sh`. It will download the source files for the camera app and compile them into
 executables. It will prompt you for the PiTFT display setup; this is your touchscreen. When propmted, select option 4, then option 3,
@@ -57,7 +64,9 @@ with Ctrl+Alt+T. Place the thermal sensor against something with a uniform tempe
 (Don't rely on a wall to be thermally uniform, as there may be conduits or pipes inside.) Run the following command and wait about 5
 minutes for it to finish:
 
-`~/ctrlr thc`
+```
+~/ctrlr thc
+```
 
 This stands for Thermal Calibrate. It takes one thousand consecutive thermal snapshots, averages them out, and generates a text file that
 represents the necessary corrections for variances in the thermal sensor. After this, your thermal images will be calibrated, although you
