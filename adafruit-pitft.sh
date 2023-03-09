@@ -6,6 +6,9 @@
 # wget https://raw.githubusercontent.com/adafruit/Raspberry-Pi-Installer-Scripts/master/adafruit-pitft.sh
 # chmod +x adafruit-pitft.sh
 # sudo ./adafruit-pitft.sh
+#
+# Modified by Julie Gagnon ssepeq@primaryodors.org
+#
 
 if [ $(id -u) -ne 0 ]; then
         echo "Installer must be run as root."
@@ -201,7 +204,7 @@ reconfig() {
 function softwareinstall() {
     echo "Installing Pre-requisite Software...This may take a few minutes!"
                 apt-get install -y libts0 1> /dev/null 2>&1 || apt-get install -y tslib 1> /dev/null 2>&1 || { warning "Apt failed to install TSLIB!" && exit 1; }
-    apt-get install -y bc fbi git python-dev python-pip python-smbus python-spidev evtest libts-bin device-tree-compiler 1> /dev/null  || { warning "Apt failed to install software!" && exit 1; }
+    apt-get install -y bc fbi git python-dev python3-pip python3-smbus python3-spidev evtest libts-bin device-tree-compiler 1> /dev/null  || { warning "Apt failed to install software!" && exit 1; }
     pip install evdev 1> /dev/null  || { warning "Pip failed to install software!" && exit 1; }
 }
 
