@@ -1,5 +1,6 @@
 # ircamebj
 Software for ExJ infrared camera.
+*** WARNING: *** This repository is a work in progress. It is not yet ready and probably won't work with your hardware.
 
 # Camera Exterior
 
