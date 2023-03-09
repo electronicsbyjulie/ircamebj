@@ -15,7 +15,7 @@ cp -R Desktop/* ~/Desktop/
 piv=$(cat /proc/cpuinfo | grep Revision)
 if [[ ${piv:11:6} < "a020d3" ]]
 then 
-	sed -i 's/\-lbcm2835//g' ~/makefile
+	sed -i 's/\-lbcm2835//g' makefile
 fi
 
 make
@@ -24,18 +24,19 @@ echo "kneads utdape" > ~/srcmd5
 
 ln -s /home/pi/ctrlr /home/pi/Desktop/ctrlr
 echo "sudo pkill raspi" > /home/pi/Desktop/kill_overlay.sh
-echo "cd ~\n~/swupd.sh" > /home/pi/Desktop/software update.sh
+# echo "cd ~\n~/swupd.sh" > /home/pi/Desktop/software update.sh
 
 sudo chmod +x *.sh
-sudo chmod +x /home/pi/Desktop/kill_overlay.sh
+sudo chmod +x kill_overlay.sh
+sudo cp *.sh ~/
 
 #write out current crontab
 sudo crontab -l > /tmp/mycron
 #echo new cron into cron file
-echo "06,13,19,28,31,35,43,49,58 * * * * /bin/bash /home/pi/gdbkp.sh >> /home/pi/cron.log" >> /tmp/mycron
-echo "04 * * * * tail -n 3000 /home/pi/cron.log > /home/pi/cron.log" >> /tmp/mycron
-echo "08 * * * * tail -n 3000 /home/pi/act.log > /home/pi/act.log" >> /tmp/mycron
-echo "16 * * * * tail -n 3000 /home/pi/bkp.log > /home/pi/bkp.log" >> /tmp/mycron
+echo "06,13,19,28,31,35,43,49,58 * * * * /bin/bash ~/gdbkp.sh >> ~/cron.log" >> /tmp/mycron
+echo "04 * * * * tail -n 3000 ~/cron.log > ~/cron.log" >> /tmp/mycron
+echo "08 * * * * tail -n 3000 ~/act.log > ~/act.log" >> /tmp/mycron
+echo "16 * * * * tail -n 3000 ~/bkp.log > ~/bkp.log" >> /tmp/mycron
 #install new cron file
 sudo crontab /tmp/mycron
 rm /tmp/mycron
