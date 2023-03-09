@@ -56,7 +56,7 @@ echo "@/bin/bash /home/pi/c1.sh" | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autost
 # echo "@/bin/bash /home/pi/c1.sh" | sudo tee -a /home/pi/.config/lxsession/LXDE/autostart
 
 cd ~
-wget https://raw.githubusercontent.com/adafruit/Raspberry-Pi-Installer-Scripts/master/adafruit-pitft.sh
+# wget https://raw.githubusercontent.com/adafruit/Raspberry-Pi-Installer-Scripts/master/adafruit-pitft.sh
 chmod +x adafruit-pitft.sh
 sudo ./adafruit-pitft.sh
 
