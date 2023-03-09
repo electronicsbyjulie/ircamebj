@@ -29,6 +29,10 @@ echo "sudo pkill raspi" > /home/pi/Desktop/kill_overlay.sh
 sudo chmod +x *.sh
 sudo chmod +x kill_overlay.sh
 sudo cp *.sh ~/
+sudo cp *.png ~/
+
+# Not certain of this step yet.
+# sudo cp boot/config.txt /boot/config.txt
 
 #write out current crontab
 sudo crontab -l > /tmp/mycron
