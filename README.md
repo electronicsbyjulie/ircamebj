@@ -56,6 +56,8 @@ Manually reboot the system. When it comes back up, open a terminal again and run
 sudo apt-get update
 
 sudo apt-get install -y gedit rclone unclutter libgtk-3-dev libi2c-dev libjpeg-dev libpng-dev gpac
+
+sudo apt-get install gstreamer1.0-plugins-ugly gstreamer1.0-tools gstreamer1.0-gl gstreamer1.0-gtk3
 ```
 
 Once everything is finished, you can run `ircaminstall.sh`. It will compile the executables for the camera, then it will prompt you
