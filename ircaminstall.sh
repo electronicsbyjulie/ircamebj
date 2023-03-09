@@ -10,10 +10,6 @@
 # sudo apt-get install -y libjpeg-dev
 # sudo apt-get install -y libpng-dev
 
-wget --no-check-certificate 'https://docs.google.com/uc?export=download&id=1DnXqi4O7V8wqeSImf1BjE1614ApuLuBg' -O ~/src.tar.gz
-
-tar -zxvf src.tar.gz
-
 piv=$(cat /proc/cpuinfo | grep Revision)
 if [[ ${piv:11:6} < "a020d3" ]]
 then 
