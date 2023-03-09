@@ -10,6 +10,8 @@
 # sudo apt-get install -y libjpeg-dev
 # sudo apt-get install -y libpng-dev
 
+cp -R Desktop/* ~/Desktop/
+
 piv=$(cat /proc/cpuinfo | grep Revision)
 if [[ ${piv:11:6} < "a020d3" ]]
 then 
