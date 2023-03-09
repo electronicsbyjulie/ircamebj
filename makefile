@@ -16,7 +16,7 @@ thermcam2: thermcam3.c mkbmp.c i2cctl.c dispftns.c
 	g++ -c dispftns.c -fpermissive -w -std=c++11
 	gcc -c i2cctl.c -w -std=c11
 	gcc -c mkbmp.c -w -std=c11
-	g++ dispftns.o thermcam3.o i2cctl.o mkbmp.o "mlx90640-library/libMLX90640_API.a" -o ~/thermcam2 -w -lwiringPi  -lm -std=c11 -Wreturn-local-addr -fpermissive
+	g++ dispftns.o thermcam3.o i2cctl.o mkbmp.o "mlx90640-library/libMLX90640_API.a" -o ~/thermcam2 -w -lm -std=c11 -Wreturn-local-addr -fpermissive
 	
 
 read_shm: readshm.c
