@@ -1179,21 +1179,38 @@ int main(char argc, char** argv)
 #ifdef _MLX90640
 			int hei2 = hei/2;
 			int wid2 = wid/2;
+			int x, y, lx, ly;
 			
-			// calone
-			/*float rdnpery = (float)(tempmax-tempmin)/therm_sz_y;
-			for (int y=0; y<therm_sz_y; y++)
-			{   reading = tempmin+rdnpery*y*(tempmax-tempmin);
-			    char* rgb = rgb_from_reading(reading, tempmin, tempmax, thermdat[1023]);
-			    
-			    int by2 = + (int)(therm_off_y * hei);
-			    for (int x=0; x<8; x++)
-			    {   int bx2 = by2*wid + x + wid-8;
-				    rdat[bx2] = rgb[0];
-				    gdat[bx2] = rgb[1];
-				    bdat[bx2] = rgb[2];
-		        }
-			}*/
+			float tharr[_THERM_W+4];
+			float frarr[_THERM_W+4];
+			float fgarr[_THERM_W+4];
+			float fbarr[_THERM_W+4];
+			
+			int focus_line = _THERM_H / 2;      // TODO
+			int maybe_parallax;
+			int best_parallax = therm_off_x;
+			float best_correlation = 0;
+			
+			ly = y * wtmp;
+			for (maybe_parallax = 0; maybe_parallax < _THERM_W/2; maybe_parallax++)
+			{
+			    for (x=0; x<_THERM_W; x++)
+			    {
+        			lx = ly+x;
+				    reading = thermdat[lx]; 
+				    tharr[x] = reading;
+				    
+				    int bx = maybe_parallax * wid + therm_sz_x * wid * x;
+				    int by = ((int)(therm_off_y * hei) + (int)(therm_sz_y * hei * y));
+				    
+				    int tsi = x+_THERM_W*y;
+				    int bmi = bx + wid*by;
+				    
+				    frarr[x] = rdat[bmi];
+				    fgarr[x] = gdat[bmi];
+				    fbarr[x] = bdat[bmi];
+			    }
+			}
 			
 			tempmin -= 2;
 			tempmax += 2;
