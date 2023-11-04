@@ -1248,9 +1248,9 @@ int main(char argc, char** argv)
 			    }
 			    
 			    float corr =
-			        (     Pearson_correlation(tharr, frarr)
-			            + Pearson_correlation(tharr, fgarr)
-			            + Pearson_correlation(tharr, fbarr)
+			        (     Pearson_correlation(tharr, frarr, _THERM_W)
+			            + Pearson_correlation(tharr, fgarr, _THERM_W)
+			            + Pearson_correlation(tharr, fbarr, _THERM_W)
 			        ) / 3;
 			    
 			    if (corr > best_correlation)
