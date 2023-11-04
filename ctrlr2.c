@@ -68,6 +68,7 @@ GdkPixbuf *gpixp, *gpixph, *gpixsv;
 int cam_pid;
 int flashir, flashv;
 int firlit, fvlit;
+int pics_taken = 0;
 
 int ch_mapping, therm_pal;
 int shutter, camres, expmode;
@@ -2048,6 +2049,12 @@ flash_II(void)
   if (have_ip && !trupl)
   {  g_timeout_add_seconds(15, G_CALLBACK (force_gdbkp), NULL);
   }
+    
+    pics_taken++;
+    if (pics_taken >= 5)
+    {
+        system("pkill ctrlr");
+    }
   
   // if (tmlaps) g_timeout_add_seconds(tmlaps, G_CALLBACK (flash), NULL);
   return FALSE;         // false so the timer ftn does not recur.
