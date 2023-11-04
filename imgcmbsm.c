@@ -128,6 +128,42 @@ float distance_between_pix5(pixel_5d a, pixel_5d b)
 	return pow(r, 0.5);
 }
 
+// http://www.sjsu.edu/faculty/gerstman/StatPrimer/correlation.pdf
+float Pearson_correlation(float* xarr, float* yarr, int length)
+{
+    if (!xarr || !yarr || !length) return 0;
+
+    int i;
+    float xavg=0, yavg=0;
+
+    for (i=0; i<length; i++)
+    {
+        // cout << i << ".";
+        xavg += xarr[i];
+        yavg += yarr[i];
+    }
+    xavg /= length;
+    yavg /= length;
+
+    float ssxx = 0.0, ssyy = 0.0, ssxy = 0.0;
+
+    for (i=0; i<length; i++)
+    {
+        float x = xarr[i];
+        float y = yarr[i];
+
+        ssxx += pow(x - xavg, 2);
+        ssyy += pow(y - yavg, 2);
+        ssxy += (x - xavg)*(y - yavg);
+    }
+
+    if (ssxx == 0 || ssyy == 0) return -1;		// insufficient data.
+
+    float r = ssxy/pow(ssxx*ssyy,0.5);
+    return r;
+}
+
+
 pixel_5d thermspot[_THERM_W*_THERM_H];
 unsigned char thermr[_THERM_W*_THERM_H], thermg[_THERM_W*_THERM_H], thermb[_THERM_W*_THERM_H];
 int wid, hei, wid2, hei2;
@@ -1210,6 +1246,10 @@ int main(char argc, char** argv)
 				    fgarr[x] = gdat[bmi];
 				    fbarr[x] = bdat[bmi];
 			    }
+			    
+			    float corr = Pearson_correlation(tharr, frarr)
+			        + Pearson_correlation(tharr, fgarr)
+			        + Pearson_correlation(tharr, fbarr);
 			}
 			
 			tempmin -= 2;
