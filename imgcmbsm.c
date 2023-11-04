@@ -1247,10 +1247,20 @@ int main(char argc, char** argv)
 				    fbarr[x] = bdat[bmi];
 			    }
 			    
-			    float corr = Pearson_correlation(tharr, frarr)
-			        + Pearson_correlation(tharr, fgarr)
-			        + Pearson_correlation(tharr, fbarr);
+			    float corr =
+			        (     Pearson_correlation(tharr, frarr)
+			            + Pearson_correlation(tharr, fgarr)
+			            + Pearson_correlation(tharr, fbarr)
+			        ) / 3;
+			    
+			    if (corr > best_correlation)
+			    {
+			        best_correlation = corr;
+			        best_parallax = maybe_parallax;
+			    }
 			}
+			
+			if (best_correlation > 0.5) therm_off_x = best_parallax;
 			
 			tempmin -= 2;
 			tempmax += 2;
