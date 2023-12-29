@@ -511,8 +511,7 @@ void raspicam_cmd_format(char* cmd, int signal, int is_vid)
     
     long double t = time(NULL);
     if ((t - last_cam_init) < 2)
-    {   // reinit is fucking up again
-        // system("/bin/bash /home/pi/reinit_fuctup.sh");
+    {   // system("/bin/bash /home/pi/reinit_fuctup.sh");
         // system("sudo reboot");
         
         return;
@@ -3494,28 +3493,28 @@ window_key_pressed(GtkWidget *widget, GdkEventKey *key, gpointer user_data)
 
 
 /******************************************************************************/
-/* SHIT THAT RUNS WHEN WE OPEN THE WINDOW LET SOME AIR IN THIS MOTHERFUCKER   */
+/* Code that runs when we open the window                                     */
 /******************************************************************************/
 
 
 void shutdown_screen()
-{   GtkWidget *shitdeun = gtk_application_window_new (app);
+{   GtkWidget *lshutdown = gtk_application_window_new (app);
         
-    gtk_window_fullscreen(GTK_WINDOW(shitdeun));
-    gtk_container_set_border_width (GTK_CONTAINER (shitdeun), 0);
+    gtk_window_fullscreen(GTK_WINDOW(lshutdown));
+    gtk_container_set_border_width (GTK_CONTAINER (lshutdown), 0);
     
-    GtkWidget *shitlbl = 
+    GtkWidget *lshutlbl = 
         gtk_label_new(
             "Shutting down....\n\nWhen the green light turns OFF and stays off, it is\nsafe to flip the power switch."
                      );
                   
-    gtk_container_add (GTK_CONTAINER (shitdeun), shitlbl); 
+    gtk_container_add (GTK_CONTAINER (lshutdown), lshutlbl); 
     
      
-    gtk_widget_show_all(shitdeun); 
+    gtk_widget_show_all(lshutdown); 
     
     cam_on=0;
-    raspistill_end_misery("displaying shitdeun screen");
+    raspistill_end_misery("displaying shutdown screen");
     
     g_timeout_add(2537, G_CALLBACK (actually_shudown_computer), NULL);
 }
@@ -4191,10 +4190,6 @@ int main (int argc, char **argv)
     int shmid  = shmget(key, 2048*sizeof(int), 0666 | IPC_CREAT);
     thermdat = (int*)shmat(shmid, (void*)0, 0);
     
-    // shared memory id DOESN'T FUCKING WORK
-    /*key_t key2 = ftok("/tmp/shm",81);
-    int shmid2  = shmget(key2, 8*sizeof(long), 0666 | IPC_CREAT);
-    tmdat = (long*)shmat(shmid2, (void*)0, 0);*/
     tmdat = thermdat;
 	
   app = gtk_application_new ("org.gtk.example", G_APPLICATION_FLAGS_NONE);
