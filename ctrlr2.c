@@ -430,7 +430,6 @@ void log_action(char* logmsg)
 /*
  * Check if a file exist using fopen() function
  * return 1 if the file exist otherwise return 0
- * WARNING: VERY KLUDGY! I'm not crediting the author so they can save face.
  */
 int cfileexists(const char * filename)
 {   /* try to open file to read */
